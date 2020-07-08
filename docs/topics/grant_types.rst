@@ -1,3 +1,4 @@
+.. _refGrantTypes:
 Grant Types
 ^^^^^^^^^^^
 The OpenID Connect and OAuth 2.0 specifications define so-called grant types (often also called flows - or protocol flows).
@@ -20,7 +21,7 @@ You can also specify the grant types list manually::
         "my_custom_grant_type" 
     };
 
-While IdentityServer supports all standard grant types, you really only need to know a two of them for common application scenarios.
+While IdentityServer supports all standard grant types, you really only need to know two of them for common application scenarios.
 
 Machine to Machine Communication
 ================================
@@ -54,11 +55,11 @@ There are two modern mitigation techniques for this:
 **OpenID Connect Hybrid Flow**
 
 This uses a response type of ``code id_token`` to add an additional identity token to the response. This token is signed and protected against substitution.
-In addition it contains the hash of code via the ``c_hash`` claim. This allows checking that you indeed got the right code (experts call this a detached signature).
+In addition it contains the hash of the code via the ``c_hash`` claim. This allows checking that you indeed got the right code (experts call this a detached signature).
 
 This solves the problem but has the following down-sides:
 
-* the ``id_token`` gets transmitted over the font-channel and might leak additional (personal identifiable) data
+* the ``id_token`` gets transmitted over the front-channel and might leak additional (personal identifiable) data
 * all the mitigitation steps (e.g. crypto) need to be implemented by the client. This results in more complicated client library implementations.
 
 **RFC 7636 - Proof Key for Code Exchange (PKCE)**

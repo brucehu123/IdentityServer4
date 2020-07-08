@@ -1,10 +1,12 @@
-Welcome to IdentityServer4 (ASP.NET Core 3.x)
+Welcome to IdentityServer4 (latest)
 =============================================
 
 .. image:: images/logo.png
    :align: center
 
 IdentityServer4 is an OpenID Connect and OAuth 2.0 framework for ASP.NET Core.
+
+.. note:: This docs cover the latest version on main branch. This might not be released yet. Use the version picker in the lower left corner to select docs for a specific version.
 
 It enables the following features in your applications:
 
@@ -51,15 +53,12 @@ It enables the following features in your applications:
 
    quickstarts/0_overview
    quickstarts/1_client_credentials
-   quickstarts/2_resource_owner_passwords
-   quickstarts/3_interactive_login
-   quickstarts/4_external_authentication
-   quickstarts/5_hybrid_and_api_access
-   quickstarts/6_javascript_client
-   quickstarts/7_entity_framework
-   quickstarts/8_aspnet_identity
-   quickstarts/community
-
+   quickstarts/2_interactive_aspnetcore
+   quickstarts/3_aspnetcore_and_apis
+   quickstarts/4_javascript_client
+   quickstarts/5_entityframework
+   quickstarts/6_aspnet_identity
+   
 .. toctree::
    :maxdepth: 3
    :hidden:
@@ -93,11 +92,13 @@ It enables the following features in your applications:
    topics/events
    topics/crypto
    topics/grant_types
-   topics/secrets
+   topics/client_authentication
    topics/extension_grants
    topics/resource_owner
    topics/refresh_tokens
    topics/reference_tokens
+   topics/persisted_grants
+   topics/pop
    topics/mtls
    topics/request_object
    topics/custom_token_request_validation
@@ -126,14 +127,15 @@ It enables the following features in your applications:
    :hidden:
    :caption: Reference
 
+   reference/options
    reference/identity_resource
+   reference/api_scope
    reference/api_resource
    reference/client
    reference/grant_validation_result
    reference/profileservice
    reference/interactionservice
    reference/deviceflow_interactionservice
-   reference/options
    reference/ef
    reference/aspnet_identity
 

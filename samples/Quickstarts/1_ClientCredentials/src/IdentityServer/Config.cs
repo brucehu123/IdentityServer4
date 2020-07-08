@@ -9,25 +9,14 @@ namespace IdentityServer
 {
     public static class Config
     {
-        public static IEnumerable<IdentityResource> GetIdentityResources()
-        {
-            return new IdentityResource[]
+        public static IEnumerable<ApiScope> ApiScopes =>
+            new List<ApiScope>
             {
-                new IdentityResources.OpenId()
+                new ApiScope("api1", "My API")
             };
-        }
 
-        public static IEnumerable<ApiResource> GetApis()
-        {
-            return new List<ApiResource>
-            {
-                new ApiResource("api1", "My API")
-            };
-        }
-
-        public static IEnumerable<Client> GetClients()
-        {
-            return new List<Client>
+        public static IEnumerable<Client> Clients =>
+            new List<Client>
             {
                 new Client
                 {
@@ -46,6 +35,5 @@ namespace IdentityServer
                     AllowedScopes = { "api1" }
                 }
             };
-        }
     }
 }

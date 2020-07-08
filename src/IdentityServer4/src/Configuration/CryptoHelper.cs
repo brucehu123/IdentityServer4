@@ -1,11 +1,7 @@
 ﻿using IdentityModel;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System;
 using System.Linq;
-using System.Reflection;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -25,7 +21,7 @@ namespace IdentityServer4.Configuration
         {
             return new RsaSecurityKey(RSA.Create(keySize))
             {
-                KeyId = CryptoRandom.CreateUniqueId(16)
+                KeyId = CryptoRandom.CreateUniqueId(16, CryptoRandom.OutputFormat.Hex)
             };
         }
 
@@ -39,7 +35,7 @@ namespace IdentityServer4.Configuration
         {
             return new ECDsaSecurityKey(ECDsa.Create(GetCurveFromCrvValue(curve)))
             {
-                KeyId = CryptoRandom.CreateUniqueId(16)
+                KeyId = CryptoRandom.CreateUniqueId(16, CryptoRandom.OutputFormat.Hex)
             };
         }
 
@@ -88,17 +84,13 @@ namespace IdentityServer4.Configuration
         {
             var signingAlgorithmBits = int.Parse(signingAlgorithm.Substring(signingAlgorithm.Length - 3));
 
-            switch (signingAlgorithmBits)
+            return signingAlgorithmBits switch
             {
-                case 256:
-                    return SHA256.Create();
-                case 384:
-                    return SHA384.Create();
-                case 512:
-                    return SHA512.Create();
-                default:
-                    throw new InvalidOperationException($"Invalid signing algorithm: {signingAlgorithm}");
-            }
+                256 => SHA256.Create(),
+                384 => SHA384.Create(),
+                512 => SHA512.Create(),
+                _ => throw new InvalidOperationException($"Invalid signing algorithm: {signingAlgorithm}"),
+            };
         }
 
         /// <summary>
@@ -106,17 +98,13 @@ namespace IdentityServer4.Configuration
         /// </summary>
         internal static ECCurve GetCurveFromCrvValue(string crv)
         {
-            switch (crv)
+            return crv switch
             {
-                case JsonWebKeyECTypes.P256:
-                    return ECCurve.NamedCurves.nistP256;
-                case JsonWebKeyECTypes.P384:
-                    return ECCurve.NamedCurves.nistP384;
-                case JsonWebKeyECTypes.P521:
-                    return ECCurve.NamedCurves.nistP521;
-                default:
-                    throw new InvalidOperationException($"Unsupported curve type of {crv}");
-            }
+                JsonWebKeyECTypes.P256 => ECCurve.NamedCurves.nistP256,
+                JsonWebKeyECTypes.P384 => ECCurve.NamedCurves.nistP384,
+                JsonWebKeyECTypes.P521 => ECCurve.NamedCurves.nistP521,
+                _ => throw new InvalidOperationException($"Unsupported curve type of {crv}"),
+            };
         }
 
         /// <summary>
@@ -145,6 +133,12 @@ namespace IdentityServer4.Configuration
             }
 
             return true;
+        }
+        internal static bool IsValidCrvValueForAlgorithm(string crv)
+        {
+            return crv == JsonWebKeyECTypes.P256 ||
+                   crv == JsonWebKeyECTypes.P384 ||
+                   crv == JsonWebKeyECTypes.P521;
         }
 
         internal static string GetRsaSigningAlgorithmValue(IdentityServerConstants.RsaSigningAlgorithm value)
@@ -201,25 +195,6 @@ namespace IdentityServer4.Configuration
             }
 
             return certificate;
-        }
-
-        // used for serialization to temporary RSA key
-        internal class TemporaryRsaKey
-        {
-            public string KeyId { get; set; }
-            public RSAParameters Parameters { get; set; }
-        }
-
-        internal class RsaKeyContractResolver : DefaultContractResolver
-        {
-            protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
-            {
-                var property = base.CreateProperty(member, memberSerialization);
-
-                property.Ignored = false;
-
-                return property;
-            }
         }
     }
 
